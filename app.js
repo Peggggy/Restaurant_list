@@ -2,7 +2,17 @@ const express = require('express')
 const app = express()
 const port = 3000
 const exphbs = require('express-handlebars')
-const restList = require('./restaurant.json')
+const mongoose = require('mongoose')
+const restaurantList = require('./restaurant.json')
+
+mongoose.connect('mongodb://localhost/todo-list', { useNewUrlParser: true, useUnifiedTopology: true })
+const db = mongoose.connection
+db.on('error', () => {
+  console.log('mongoose error!')
+})
+db.once('open', () => {
+  console.log('mongoose connected!')
+})
 
 //template engine setting
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
@@ -13,22 +23,22 @@ app.use(express.static('public'))
 
 //homepage route setting
 app.get('/', (req, res) => {
-  res.render('index', { rests: restList.results })
+  res.render('index', { restaurants: restaurantList.results })
 })
 
 //showpage route 
 app.get('/restaurants/:id', (req, res) => {
-  const rest = restList.results.find(rest => rest.id.toString() === req.params.id)
-  res.render('show', { rest: rest })
+  const restaurant = restaurantList.results.find(restaurant => restaurant.id.toString() === req.params.id)
+  res.render('show', { restaurant: restaurant })
 })
 
 //searching route 
 app.get('/search', (req, res) => {
   const keyword = req.query.keyword
-  const rests = restList.results.filter(rest => {
+  const restaurants = restaurantList.results.filter(rest => {
     return rest.name.toLowerCase().includes(keyword.toLowerCase()) || rest.category.toLowerCase().includes(keyword.toLowerCase())
   })
-  res.render('index', { rests: rests, keyword: keyword })
+  res.render('index', { restaurants: restaurants, keyword: keyword })
 })
 
 app.listen(port, () => {
