@@ -3,9 +3,10 @@ const app = express()
 const port = 3000
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
-const restaurantList = require('./restaurant.json')
+const Restaurant = require('./models/restaurant')
+// const restaurantList = require('./restaurant.json')
 
-mongoose.connect('mongodb://localhost/todo-list', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection
 db.on('error', () => {
   console.log('mongoose error!')
@@ -23,7 +24,10 @@ app.use(express.static('public'))
 
 //homepage route setting
 app.get('/', (req, res) => {
-  res.render('index', { restaurants: restaurantList.results })
+  Restaurant.find()
+    .lean()
+    .then(restaurants => res.render('index', { restaurants }))
+    .catch(error => console.log(error))
 })
 
 //showpage route 
