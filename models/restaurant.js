@@ -1,35 +1,41 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const restaurantSchema = new Schema({
-  id: {
-    type: Number
-  },
   name: {
-    type: String
+    type: String,
+    require: true
   },
   name_en: {
-    type: String
+    type: String,
+    require: false
   },
   category: {
-    type: String
+    type: String,
+    require: true
   },
   image: {
-    type: String
+    type: String,
+    require: false
   },
   location: {
-    type: String
+    type: String,
+    require: true
   },
   phone: {
-    type: String
+    type: String,
+    require: true
   },
   google_map: {
-    type: String
+    type: String,
+    require: false
   },
   rating: {
-    type: Number
+    type: Number,
+    require: true
   },
   description: {
-    type: String
+    type: String,
+    require: false
   },
 })
 
